@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        Todo: <%= todo.title %>
+    </title>
+</head>
+
+<body>
+    <h1>
+        <%= todo.title %>
+    </h1>
+    <a href="/">Zpět na seznam</a>
+    <p>Stav: <% if (todo.done) { %>
+            <span>dokončeno</span>
+            <% } else { %>
+                <span>nedokončeno</span>
+                <% } %>
+    </p>
+    <ul>
+        <li><a href="/todos/<%= todo.id %>/toggle">Změnit stav</a></li>
+        <% if (todo.done) { %>
+            <li><a href="/todos/<%= todo.id %>/remove">odebrat</a></li>
+            <% } %>
+    </ul>
+    <form method="post" action="/todo/<%= todo.id %>/rename">
+        <input name="title" />
+        <button type="submit">Přejmenovat</button>
+    </form>
+</body>
+
+</html>
