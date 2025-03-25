@@ -52,7 +52,9 @@ app.get("/todos/:id/toggle", async (c) => {
 
   todo.done = !todo.done;
 
-  return c.redirect("/");
+  const referer = c.req.header("Referer");
+
+  return c.redirect(referer);
 });
 
 app.get("/todos/:id/remove", async (c) => {
