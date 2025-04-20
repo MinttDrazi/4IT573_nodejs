@@ -10,32 +10,38 @@
 <body>
   <a href="/">Todočka</a>
   <hr />
-  <h1>
-    <%= todo.title %>
-  </h1>
-  <h4>
-    Priorita: <%= todo.priority %>
-  </h4>
+  <div id="todo">
+    <%- include('_todo.html') %>
+  </div>
   <hr />
-  <% if (todo.done) { %>
-    <a href="/todos/<%= todo.id %>/toggle">dokončeno</a>
-    <a href="/todos/<%= todo.id %>/remove">odebrat</a>
-    <% } else { %>
-      <a href="/todos/<%= todo.id %>/toggle"> nedokončeno </a>
-      <% } %>
-        <hr />
-        <h2>Upravit todočko</h2>
-        <form action="/todos/<%= todo.id %>" method="post">
-          <label>Titulek</label>
-          <input name="title" value="<%= todo.title %>" /><br />
-          <label>Priorita</label>
-          <select name="priority">
-            <option value="low" <%=todo.priority==="low" ? "selected" : "" %>>low</option>
-            <option value="normal" <%=todo.priority==="normal" ? "selected" : "" %>>normal</option>
-            <option value="high" <%=todo.priority==="high" ? "selected" : "" %>>high</option>
-          </select><br />
-          <button type="submit">Uložit</button>
-        </form>
+  <h2>Upravit todočko</h2>
+  <form action="/todos/<%= todo.id %>" method="post">
+    <label>Titulek</label>
+    <input name="title" value="<%= todo.title %>" />
+    <label>Priorita</label>
+    <select name="priority">
+      <option value="low" <%=todo.priority==='low' ? 'selected' : '' %>>Nízká</option>
+      <option value="normal" <%=todo.priority==='normal' ? 'selected' : '' %>>Střední</option>
+      <option value="high" <%=todo.priority==='high' ? 'selected' : '' %>>Vysoká</option>
+    </select>
+    <button type="submit">Uložit</button>
+  </form>
+
+  <script>
+    const ws = new WebSocket("ws://localhost:3000/ws")
+
+    ws.addEventListener("message", (evt) => {
+      const { type, id, html } = JSON.parse(evt.data)
+
+      if (type === "todo" && id === <%= todo.id %>) {
+      const el = document.getElementById("todo")
+
+      el.innerHTML = html
+    } else if (type === "todoDeleted" && id === <%= todo.id %>) {
+      window.location.replace('/')
+    }
+      })
+  </script>
 </body>
 
 </html>
