@@ -1,47 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0"
-    />
-    <title>Document</title>
-  </head>
-  <body>
-    <a href="/">Todočka</a>
-    <hr />
-    <div id="todo">
-      <%- include('_todo.html') %>
-    </div>
-    <hr />
-    <h2>Upravit todočko</h2>
-    <form action="/todos/<%= todo.id %>" method="post">
-      <label>Titulek</label>
-      <input name="title" value="<%= todo.title %>" />
-      <label>Priorita</label>
-      <select name="priority">
-        <option value="low" <%= todo.priority === 'low' ? 'selected' : '' %>>Nízká</option>
-        <option value="normal" <%= todo.priority === 'normal' ? 'selected' : '' %>>Střední</option>
-        <option value="high" <%= todo.priority === 'high' ? 'selected' : '' %>>Vysoká</option>
-      </select>
-      <button type="submit">Uložit</button>
-    </form>
 
-    <script>
-      const ws = new WebSocket("ws://localhost:3000/ws")
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Document</title>
+</head>
 
-      ws.addEventListener("message", (evt) => {
-        const { type, id, html } = JSON.parse(evt.data)
+<body>
+  <a href="/">Todočka</a>
+  <hr />
+  <div id="todo">
+    <%- include('_todo.html') %>
+  </div>
+  <hr />
+  <h2>Upravit todočko</h2>
+  <form action="/todos/<%= todo.id %>" method="post">
+    <label for="title">Titulek</label>
+    <input name="title" id="title" value="<%= todo.title %>" />
+    <label for="priority">Priorita</label>
+    <select name="priority" id="priority">
+      <option value="low" <%=todo.priority==='low' ? 'selected' : '' %>>Nízká</option>
+      <option value="normal" <%=todo.priority==='normal' ? 'selected' : '' %>>Střední</option>
+      <option value="high" <%=todo.priority==='high' ? 'selected' : '' %>>Vysoká</option>
+    </select>
+    <button type="submit">Uložit</button>
+  </form>
 
-        if (type === "todo" && id === <%= todo.id %>) {
-          const el = document.getElementById("todo")
+  <script>
+    const ws = new WebSocket("ws://localhost:3000/ws")
 
-          el.innerHTML = html
-        } else if (type === "todoDeleted" && id === <%= todo.id %>) {
-          window.location.replace('/')
-        }
+    ws.addEventListener("message", (evt) => {
+      const { type, id, html } = JSON.parse(evt.data)
+
+      if (type === "todo" && id === <%= todo.id %>) {
+      const el = document.getElementById("todo")
+
+      el.innerHTML = html
+    } else if (type === "todoDeleted" && id === <%= todo.id %>) {
+      window.location.replace('/')
+    }
       })
-    </script>
-  </body>
+  </script>
+</body>
+
 </html>
